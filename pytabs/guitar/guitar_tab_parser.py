@@ -139,10 +139,15 @@ class GuitarTabParser:
                   }[string_height]
         return base + string + int(fret)
     
-    def parse_tablature(self, tab_string):
-        """Parses the tablature string and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with TabNotes."""
+    def parse_tablature_string(self, tab_string):
+        """Extracts tablature string model and then parses it."""
         tab_strings_model = self.extract_strings(tab_string)
-        tab_note_symbols = self.extract_note_symbols(tab_strings_model)
+        return self.parse_tablature_model(tab_strings_model)
+    
+    def parse_tablature_model(self, tab_model):
+        """Parses the tablature string model and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with TabNotes."""
+        
+        tab_note_symbols = self.extract_note_symbols(tab_model)
         
         ret = []
         
@@ -152,7 +157,7 @@ class GuitarTabParser:
             note_container = NoteContainer()
             
             # add every note to note_container
-            for note_symbol, string in zip(beat, tab_strings_model.strings):
+            for note_symbol, string in zip(beat, tab_model.strings):
                 
                 note_model = self.parse_note(note_symbol)
                 

@@ -90,7 +90,7 @@ class Test(unittest.TestCase):
         """
     
     def test_empty(self):    
-        note_container = self.parser.parse_tablature(self.test_tab_empty)[0]
+        note_container = self.parser.parse_tablature_string(self.test_tab_empty)[0]
         self.assertEquals(note_container[0], Note('E-3'))
         self.assertEquals(note_container[1], Note('A-3'))
         self.assertEquals(note_container[2], Note('D-4'))
@@ -99,7 +99,7 @@ class Test(unittest.TestCase):
         self.assertEquals(note_container[5], Note('E-5'))
         
     def test_frets(self):
-        note_container = self.parser.parse_tablature(self.test_tab_frets)[0]
+        note_container = self.parser.parse_tablature_string(self.test_tab_frets)[0]
         self.assertEquals(note_container[0], Note('A#-3'))
         self.assertEquals(note_container[1], Note('D-4'))
         self.assertEquals(note_container[2], Note('F#-4'))
@@ -108,7 +108,7 @@ class Test(unittest.TestCase):
         self.assertEquals(note_container[5], Note('F-5'))
     
     def test_pm(self):
-        note_container = self.parser.parse_tablature(self.test_tab_pm)[0]
+        note_container = self.parser.parse_tablature_string(self.test_tab_pm)[0]
         self.assertFalse(note_container[0].pm)
         self.assertTrue(note_container[1].pm)
         self.assertFalse(note_container[2].pm)
@@ -118,25 +118,25 @@ class Test(unittest.TestCase):
     
     def test_equal_length(self):
         with self.assertRaises(ParsingException):
-            self.parser.parse_tablature(self.test_tab_equal_length)
+            self.parser.parse_tablature_string(self.test_tab_equal_length)
     
     def test_missplaced_note(self):
         with self.assertRaises(ParsingException):
-            self.parser.parse_tablature(self.test_tab_missplaced_note)
+            self.parser.parse_tablature_string(self.test_tab_missplaced_note)
     
     def test_end_with_dash(self):
         with self.assertRaises(TextXSyntaxError):
-            self.parser.parse_tablature(self.test_tab_end_with_dash)
+            self.parser.parse_tablature_string(self.test_tab_end_with_dash)
     
     def test_rests(self):
-        note_container = self.parser.parse_tablature(self.test_tab_rests)[0]
+        note_container = self.parser.parse_tablature_string(self.test_tab_rests)[0]
         self.assertEquals(note_container[0], Note('A-3'))
         self.assertEquals(note_container[1], Note('G-4'))
         self.assertEquals(note_container[2], Note('E-5'))
         self.assertEquals(len(note_container), 3)
         
     def test_multiple_columns(self):
-        self.assertEquals(len(self.parser.parse_tablature(self.test_tab_multiple_columns)), 3)
+        self.assertEquals(len(self.parser.parse_tablature_string(self.test_tab_multiple_columns)), 3)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

@@ -1,0 +1,28 @@
+
+/*
+Guitar tablature grammar:
+
+example:
+
+e|-0----10-3-||
+B|-0----1--1-||
+G|-12pm----6-||
+D|-2----9--0-||
+A|-2----3--2-||
+E|-----------||
+*/
+
+Tablature:
+	strings+=String
+;
+
+// string example G|-12pm----6-||
+String:
+	height=Height
+	'|-'
+	chars=/^([\d(pm)-]+-)+\|\|$/
+;
+
+Height:
+	'e'|'B'|'G'|'D'|'A'|'E'
+;

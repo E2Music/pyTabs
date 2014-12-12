@@ -50,18 +50,17 @@ class GuitarTabParser:
         """Initializes metamodels with grammars specified in tab_grammar_file and tab_note_grammar_file."""
         if tab_grammar_file:
             self.tab_metamodel = metamodel_from_file(tab_grammar_file)
+            self.tab_metamodel.register_obj_processors({'String': self.remove_end_pipes})
         if tab_note_grammar_file:
             self.tab_note_metamodel = metamodel_from_file(tab_note_grammar_file)
     
     def extract_strings(self, tab_string):
-        """Extracts guitar tablature model (textx) from a tab_string."""
-        tab_strings_model = self.tab_metamodel.model_from_str(tab_string)
-        
-        # remove trailing '||'
-        for string in tab_strings_model.strings:
-            string.chars = string.chars[:-2]
-        
-        return tab_strings_model
+        """Extracts guitar tablature model (textx) from a tab_string."""        
+        return self.tab_metamodel.model_from_str(tab_string)
+    
+    def remove_end_pipes(self, tab_string):
+        """remove trailing '||'"""
+        tab_string.chars = tab_string.chars[:-2]
     
     def extract_note_symbols(self, tab_strings_model, additional_dashes=0):
         """Extracts note characters from tab_strings_model and place them in a list of beat columns."""

@@ -1,0 +1,1 @@
+This is a patched textx.py, lines 594 to 601 are commented out in order to allow rules that are not separated by a space character.

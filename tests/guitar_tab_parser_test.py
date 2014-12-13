@@ -89,6 +89,15 @@ class Test(unittest.TestCase):
         A|-0-6--4-||
         E|-0----7-||
         """
+        
+        self.test_tab_additional_dashes = """
+        e|-0---7----4---||
+        B|-5---5----5---||
+        G|-0---53---6---||
+        D|-0---6----7---||
+        A|-0---6----4---||
+        E|-0--------7---||
+        """
     
     def test_empty(self):    
         note_container = self.parser.parse_tablature_string(self.test_tab_empty)[0]
@@ -138,6 +147,9 @@ class Test(unittest.TestCase):
         
     def test_multiple_columns(self):
         self.assertEquals(len(self.parser.parse_tablature_string(self.test_tab_multiple_columns)), 3)
+    
+    def test_additional_dashes(self):
+        self.assertEquals(len(self.parser.parse_tablature_string(self.test_tab_additional_dashes, 2)), 3)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

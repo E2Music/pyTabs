@@ -88,10 +88,10 @@ class TablatureProcessor:
         else:
             return string[n:]
     
-    def process_tablature_model(self, tab_model):
+    def process_tablature_model(self, tab_model, additional_dashes=0):
         """Processes the tablature model (using note_processor) and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with mingus Notes."""
         
-        beats = self.extract_note_symbols(tab_model)
+        beats = self.extract_note_symbols(tab_model, additional_dashes)
         mark_symbols = self.extract_string_marks(tab_model)
         
         # list of NoteContainer instances
@@ -140,10 +140,10 @@ class TablatureParser:
         self.tab_metamodel = metamodel_from_file(tab_grammar_file)
         self.tab_metamodel.register_obj_processors({'String': process_tab_string})
     
-    def parse_tablature_string(self, tab_string):
+    def parse_tablature_string(self, tab_string, additional_dashes=0):
         """Extracts tablature string model (textx) and then parses it."""
         tab_strings_model = self.tab_metamodel.model_from_str(tab_string)
-        return self.processor.process_tablature_model(tab_strings_model)
+        return self.processor.process_tablature_model(tab_strings_model, additional_dashes)
 
 def process_tab_string(tab_string):
     """Process a String object."""

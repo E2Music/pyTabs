@@ -1,41 +1,23 @@
 '''
-Created on Dec 12, 2014
+Created on Dec 13, 2014
 
 @author: zeljko.bal
 '''
 from os.path import os
 from textx.metamodel import metamodel_from_file
-
-from mingus.containers.Note import Note
 from mingus.containers.NoteContainer import NoteContainer
+
 
 GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
 
-class TabNote(Note, object):
-    """Mingus Note sa dodatnim gitarskim parametrima."""
-    def __init__(self, name= 'C', octave = 4, dynamics = {}, pm = False):
-        super(TabNote, self).__init__(name, octave, dynamics)
-        self.pm = pm
-
-class ParsingException(Exception):
-    def __init__(self, args):
-        super(ParsingException, self).__init__(args)
-
-class GuitarTabProcessor:
+class TablatureProcessor:
     """
-    Processes guitar tablature model.
+    Processes tablature model.
     """
     
-    def __init__(self, tab_note_grammar_file=None):
-        """Initializes note metamodel, if file is not specified initialize with default file."""
-        if not tab_note_grammar_file:
-            tab_note_grammar_file = GRAMMAR_PATH + "guitar_tab_note.tx"
-        
-        self.tab_note_metamodel = metamodel_from_file(tab_note_grammar_file)
-    
-    def get_note_model(self, tab_note_symbol):
-        """Create a tab_note_model (textx) from a tab_note_symbol string."""
-        return self.tab_note_metamodel.model_from_str(tab_note_symbol)
+    def __init__(self, note_processor):
+        assert not note_processor is None
+        self.note_processor = note_processor
     
     def extract_note_symbols(self, tab_strings_model, additional_dashes=0):
         """Extracts note characters from tab_strings_model and place them in a list of beat columns."""
@@ -68,11 +50,9 @@ class GuitarTabProcessor:
                 # if it is a pause set note_chars to '-' and eat another '-' because split() didn't
                 if note_chars == '':
                     note_chars = '-'
-                    self._eat_dashes(string, 1)
+                    string.chars = self._eat_leading_dashes(string.chars, 1)
                 
                 note_chars_column.append(note_chars)
-                
-                # recognise a note using textx
                 
             columns.append(note_chars_column)
                     
@@ -82,64 +62,60 @@ class GuitarTabProcessor:
             # eat max_length number of dashes from all other strings
             for string, chars in zip(tab_strings_model.strings, note_chars_column):
                 # if all chars to eat are '-' eat, else error
-                self._eat_dashes(string, (max_length - len(chars)) + additional_dashes)
+                string.chars = self._eat_leading_dashes(string.chars, (max_length - len(chars)) + additional_dashes)
+                
+    def extract_string_marks(self, tab_strings_model):
+        """Extracts the string mark symbol (at the beginning of the string)."""
+        if len(tab_strings_model.strings) == 0:
+            raise ParsingException("string list empty")
+        
+        mark_column = [string.mark for string in tab_strings_model.strings]
+        
+        if not all(len(mark) == len(mark_column[0]) for mark in mark_column):
+            raise ParsingException("not all marks are of the same length")
+        
+        # extract everything up to the first '-'        
+        return [mark.split('-', 1)[0] for mark in mark_column]
     
-    def _eat_dashes(self, string, n):
+    def _eat_leading_dashes(self, string, n):
         """Remove n number of leading dashes, if non dash character is encountered ParsingException is thrown."""
         if n == 0:
-            return
-        elif len(string.chars) == 0:
+            return string
+        elif len(string) == 0:
             raise ParsingException("expected '-'")
-        elif not all(c == '-' for c in string.chars[:n]):
+        elif not all(c == '-' for c in string[:n]):
             raise ParsingException("expected '-'")
         else:
-            string.chars = string.chars[n:]
-    
-    def _note_num_from_fret(self, fret, string_height):
-        """Calculates a note number."""
-        # base is the lowest E-0
-        base = 3 * 12
-        # frets from base to empty string
-        string = {"e":28,
-                  "B":23,
-                  "G":19,
-                  "D":14,
-                  "A":9,
-                  "E":4,
-                  }[string_height]
-        return base + string + int(fret)
+            return string[n:]
     
     def process_tablature_model(self, tab_model):
-        """Parses the tablature model and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with TabNotes."""
+        """Processes the tablature model (using note_processor) and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with mingus Notes."""
         
-        tab_note_symbols = self.extract_note_symbols(tab_model)
+        beats = self.extract_note_symbols(tab_model)
+        mark_symbols = self.extract_string_marks(tab_model)
         
-        ret = []
+        # list of NoteContainer instances
+        note_containers = []
         
         # for every beat add a NoteContainer
-        for beat in tab_note_symbols:
+        for beat in beats:
             
             note_container = NoteContainer()
             
-            # add every note to note_container
-            for note_symbol, string in zip(beat, tab_model.strings):
+            for note_symbol, mark_symbol in zip(beat, mark_symbols):
                 
-                note_model = self.get_note_model(note_symbol)
+                # process the note_symbol and mark_symbol and get a Note instance
+                note = self.note_processor.process_note(note_symbol, mark_symbol)
                 
-                # skip rests
-                if note_model == '-':
-                    continue
-                
-                note_num = self._note_num_from_fret(note_model.fret, string.height)
-                note = TabNote(pm=note_model.pm)
-                note.from_int(note_num)
-                note_container.add_note(note)
+                # add every note that is not None to note_container
+                if note:
+                    note_container.add_note(note)
             
-            ret.append(note_container)
+            note_containers.append(note_container)
         
-        return ret
-    
-class GuitarTabParser:
+        return note_containers
+
+class TablatureParser:
     """
     Parses tablatures in form of:
     e|-0-----10-3-||
@@ -154,27 +130,26 @@ class GuitarTabParser:
     all strings must be of equal length and each one must start with '|-' and end with '-||'
     """
     
-    def __init__(self, tab_grammar_file=None):
+    def __init__(self, note_processor, tab_grammar_file=None):
         """Initializes metamodel and processor, if metamodel file is not specified initialize with default file."""
-        self.processor = GuitarTabProcessor()
+        self.processor = TablatureProcessor(note_processor)
         
         if not tab_grammar_file:
-            tab_grammar_file = GRAMMAR_PATH + "guitar_tab.tx"
+            tab_grammar_file = GRAMMAR_PATH + "tablature.tx"
         
         self.tab_metamodel = metamodel_from_file(tab_grammar_file)
-        self.tab_metamodel.register_obj_processors({'String': remove_end_pipes})
-        
-    def get_strings_model(self, tab_string):
-        """Extracts guitar tablature model (textx) from a tab_string."""        
-        return self.tab_metamodel.model_from_str(tab_string)
+        self.tab_metamodel.register_obj_processors({'String': process_tab_string})
     
     def parse_tablature_string(self, tab_string):
-        """Extracts tablature string model and then parses it."""
-        tab_strings_model = self.get_strings_model(tab_string)
+        """Extracts tablature string model (textx) and then parses it."""
+        tab_strings_model = self.tab_metamodel.model_from_str(tab_string)
         return self.processor.process_tablature_model(tab_strings_model)
 
-def remove_end_pipes(tab_string):
-    """remove trailing '||'"""
+def process_tab_string(tab_string):
+    """Process a String object."""
+    # remove trailing '||' from chars
     tab_string.chars = tab_string.chars[:-2]
     
-    
+class ParsingException(Exception):
+    def __init__(self, args):
+        super(ParsingException, self).__init__(args)

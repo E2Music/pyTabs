@@ -8,14 +8,15 @@ import unittest
 
 from mingus.containers import Note
 
-from pytabs.guitar.guitar_tab_parser import GuitarTabParser, ParsingException
+from pytabs.guitar.guitar_tablature import GuitarNoteProcessor
+from pytabs.tablature.tablature import TablatureParser, ParsingException
 
 
 class Test(unittest.TestCase):
 
     def setUp(self):
               
-        self.parser = GuitarTabParser()
+        self.parser = TablatureParser(GuitarNoteProcessor())
         
         self.test_tab_empty = """
         e|-0-||

@@ -1,0 +1,39 @@
+import chords
+
+Program:
+	"song-start"
+
+	header=SongHeader
+	
+	sequences*=SongSequence
+
+	"song-end"
+;
+
+SongHeader:
+"["
+	"Name:" name=STRING
+	"Author:" author=STRING
+	"Tempo:" tempoup=INT "/" tempodown=INT
+"]"
+;
+
+SongSequence:
+	"sequence-start" type=InstrumentType name=STRING 
+	
+	value=SourceType 
+	
+	"sequence-end"
+;
+
+InstrumentType:
+	"guitar-solo"|"guitar-rhythm"|"drumms"|"keyboards"|"bass"|"electro"
+;
+
+SourceType:
+	GuitarChords|"DODATI DRUGE GRAMATIKE"
+;
+
+Comment:
+  /\/\/.*$/
+;

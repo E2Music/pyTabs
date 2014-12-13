@@ -1,4 +1,4 @@
-Program:
+GuitarChords:
 	'begin'
 	
 		chords*=Command

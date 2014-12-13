@@ -1,0 +1,30 @@
+
+song-start
+
+[
+	Name: "Test"
+	Author: "Milos"
+	Tempo: 4/4
+]
+
+//ovde svira samo Monkey
+sequence-start guitar-rhythm "Monkey"
+
+C D
+
+sequence-end
+
+sequence-start guitar-solo "Head"
+
+A E
+
+sequence-end
+
+sequence-start bass "Fildey"
+
+F G
+
+sequence-end
+
+
+song-end

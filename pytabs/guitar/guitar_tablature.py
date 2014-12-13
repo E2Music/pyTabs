@@ -38,7 +38,7 @@ class GuitarNoteProcessor:
                   }[string_height]
         return base + string + int(fret)
     
-    def process_note(self, note_symbol, mark_symbol):
+    def __call__(self, note_symbol, mark_symbol):
         """Processes a note based on note_symbol and string mark_symbol, returns a Note instance."""
         note_model = self.tab_note_metamodel.model_from_str(note_symbol)
         

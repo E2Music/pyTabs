@@ -15,9 +15,13 @@ class TablatureProcessor:
     Processes tablature model.
     """
     
-    def __init__(self, note_processor):
-        assert not note_processor is None
-        self.note_processor = note_processor
+    def __init__(self, process_note):
+        """
+        Accepts a process_note(note_symbol, mark_symbol) callable  
+        that returns an instance of mingus Note or its subclass.
+        """
+        assert process_note is not None
+        self.process_note = process_note
     
     def extract_note_symbols(self, tab_strings_model, additional_dashes=0):
         """Extracts note characters from tab_strings_model and place them in a list of beat columns."""
@@ -105,7 +109,7 @@ class TablatureProcessor:
             for note_symbol, mark_symbol in zip(beat, mark_symbols):
                 
                 # process the note_symbol and mark_symbol and get a Note instance
-                note = self.note_processor.process_note(note_symbol, mark_symbol)
+                note = self.process_note(note_symbol, mark_symbol)
                 
                 # add every note that is not None to note_container
                 if note:

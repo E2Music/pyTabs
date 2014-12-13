@@ -71,24 +71,29 @@ class Music:
                             suffixchord = self._suffix_decor_prep(c)
                             
                             print("{}/{}".format(prefixchord, suffixchord))
+                            chords.append("{}/{}".format(prefixchord, suffixchord))
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
                             suffixchord = self._suffix_decor_no_prep(c)
                             
                             print("{}/{}".format(prefixchord, suffixchord))
-                            
+                            chords.append("{}/{}".format(prefixchord, suffixchord))
                     #nema povislicu ili snizilicu
                     else:
                         pass
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
                             suffixchord = self._suffix_no_decor_prep(c)
+                            
                             print("{}/{}".format(prefixchord, suffixchord))
+                            chords.append("{}/{}".format(prefixchord, suffixchord))
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
                             suffixchord = self._suffix_no_decor_no_prep(c)
+                            
                             print("{}/{}".format(prefixchord, suffixchord))
+                            chords.append("{}/{}".format(prefixchord, suffixchord))
                 else:
                     #ima povisilicu ili snizilicu
                     if(c.prefix.decor):
@@ -96,19 +101,26 @@ class Music:
                         #ima molove majeve susove divove itd
                         if(c.prefix.prep):
                             prefixchord = self._prefix_decor_prep(c)
+                            
                             print("{}".format(prefixchord))
+                            chords.append("{}".format(prefixchord))
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
+                            
                             print("{}".format(prefixchord)) 
+                            chords.append("{}".format(prefixchord))
                     #nema povislicu ili snizilicu
                     else:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
+                            
                             print("{}".format(prefixchord))
+                            chords.append("{}".format(prefixchord))
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
                             print("{}".format(prefixchord))
+                            chords.append("{}".format(prefixchord))
             else:
                 print("pause {}".format(c.time))
 

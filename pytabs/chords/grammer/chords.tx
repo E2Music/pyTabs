@@ -1,9 +1,5 @@
 GuitarChords:
-	'begin'
-	
-		chords*=Command
-	
-	'end'
+	chords*=Command
 ;
 
 Command:

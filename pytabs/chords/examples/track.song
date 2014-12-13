@@ -1,30 +1,22 @@
-
-song-start
-
 [
-	Name: "Test"
-	Author: "Milos"
-	Tempo: 4/4
+	Name "Test"
+	Author "Milos"
+	Beat 4/4
+	Tempo 120
 ]
 
 //ovde svira samo Monkey
-sequence-start guitar-rhythm "Monkey"
+sequence guitar-rhythm "Monkey"
+{
+C Dm
+}
 
-C D
-
-sequence-end
-
-sequence-start guitar-solo "Head"
-
+sequence guitar-solo "Head"
+{
 A E
+}
 
-sequence-end
-
-sequence-start bass "Fildey"
-
+sequence bass "Fildey"
+{
 F G
-
-sequence-end
-
-
-song-end
+}

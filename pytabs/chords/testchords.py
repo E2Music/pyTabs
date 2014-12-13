@@ -7,11 +7,21 @@ from types import NoneType
 
 from textx.metamodel import metamodel_from_file
 
-
+"""
+    Procesor koji ce u slucaju da se pojavi akord bez pridruzene INT vrednosti, 
+    prebaciti 0 u prazan string. Na ovaj nacin mingus moze da svira samo akord.
+    
+    Args:move_cmd model koji se proverava
+    
+"""
 def move_command_processor(move_cmd):
     if move_cmd.number == 0:
         move_cmd.number = ""
 
+"""
+    Klasa koja opisuje model akorada koji se dobijaju parsiranjem ulaznog
+    fajla na osnovu zadate gramatike
+"""
 class Music:
     
     def _prefix_decor_prep(self, c):

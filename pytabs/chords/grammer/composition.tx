@@ -1,29 +1,26 @@
 import chords
 
 Program:
-	"song-start"
-
 	header=SongHeader
-	
 	sequences*=SongSequence
-
-	"song-end"
 ;
 
 SongHeader:
 "["
-	"Name:" name=STRING
-	"Author:" author=STRING
-	"Tempo:" tempoup=INT "/" tempodown=INT
+	"Name" name=STRING
+	"Author" author=STRING
+	"Beat" beatup=INT "/" beatdown=INT
+	"Tempo" tempo=INT
 "]"
 ;
 
 SongSequence:
-	"sequence-start" type=InstrumentType name=STRING 
+	"sequence" type=InstrumentType name=STRING 
+	"{"
 	
 	value=SourceType 
 	
-	"sequence-end"
+	"}"
 ;
 
 InstrumentType:

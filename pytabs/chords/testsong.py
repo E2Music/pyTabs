@@ -8,8 +8,9 @@ from textx.metamodel import metamodel_from_file
 
 class Song:
     def interpret(self, model):
-        print(" {} \n {} \n {}/{} \n".format(model.header.name,model.header.author,
-                                            model.header.tempoup,model.header.tempodown))
+        print(" {} \n {} \n {}/{} \n {}".format(model.header.name,model.header.author,
+                                            model.header.beatup,model.header.beatdown,
+                                            model.header.tempo))
         for seq in model.sequences:
             print("{} {}".format(seq.type,seq.name))
             for val in seq.value.chords:

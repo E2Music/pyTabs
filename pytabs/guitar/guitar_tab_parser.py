@@ -9,6 +9,8 @@ from textx.metamodel import metamodel_from_file
 from mingus.containers.Note import Note
 from mingus.containers.NoteContainer import NoteContainer
 
+GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+
 class TabNote(Note, object):
     """Mingus Note sa dodatnim gitarskim parametrima."""
     def __init__(self, name= 'C', octave = 4, dynamics = {}, pm = False):
@@ -19,48 +21,21 @@ class ParsingException(Exception):
     def __init__(self, args):
         super(ParsingException, self).__init__(args)
 
-class GuitarTabParser:
+class GuitarTabProcessor:
     """
-    Parses tablatures in form of:
-    e|-0-----10-3-||
-    B|-------1--1-||
-    G|-12pm-----6-||
-    D|-2-----9--0-||
-    A|-2-----3--2-||
-    E|------------||
-    
-    All notes must be separated by a dash '-' and they can be of arbitrary length (with parameters),
-    every note must be followed by additional dashes for the length of the longest note in a column,
-    all strings must be of equal length and each one must start with '|-' and end with '-||'
+    Processes guitar tablature model.
     """
     
-    def __init__(self, tab_grammar_file=None, tab_note_grammar_file=None):
-        """Initializes metamodels, if files are not specified initialize with default files."""
-        # initialize textx metamodels
-        if not tab_grammar_file or not tab_note_grammar_file:
-            directory = os.path.dirname(os.path.realpath(__file__))
-            prefix = directory + "/grammar/"
-            if not tab_grammar_file:
-                tab_grammar_file = prefix + "guitar_tab.tx"
-            if not tab_note_grammar_file:
-                tab_note_grammar_file = prefix + "guitar_tab_note.tx"
-        self.init_metamodels(tab_grammar_file, tab_note_grammar_file)
+    def __init__(self, tab_note_grammar_file=None):
+        """Initializes note metamodel, if file is not specified initialize with default file."""
+        if not tab_note_grammar_file:
+            tab_note_grammar_file = GRAMMAR_PATH + "guitar_tab_note.tx"
+        
+        self.tab_note_metamodel = metamodel_from_file(tab_note_grammar_file)
     
-    def init_metamodels(self, tab_grammar_file, tab_note_grammar_file):
-        """Initializes metamodels with grammars specified in tab_grammar_file and tab_note_grammar_file."""
-        if tab_grammar_file:
-            self.tab_metamodel = metamodel_from_file(tab_grammar_file)
-            self.tab_metamodel.register_obj_processors({'String': self.remove_end_pipes})
-        if tab_note_grammar_file:
-            self.tab_note_metamodel = metamodel_from_file(tab_note_grammar_file)
-    
-    def extract_strings(self, tab_string):
-        """Extracts guitar tablature model (textx) from a tab_string."""        
-        return self.tab_metamodel.model_from_str(tab_string)
-    
-    def remove_end_pipes(self, tab_string):
-        """remove trailing '||'"""
-        tab_string.chars = tab_string.chars[:-2]
+    def get_note_model(self, tab_note_symbol):
+        """Create a tab_note_model (textx) from a tab_note_symbol string."""
+        return self.tab_note_metamodel.model_from_str(tab_note_symbol)
     
     def extract_note_symbols(self, tab_strings_model, additional_dashes=0):
         """Extracts note characters from tab_strings_model and place them in a list of beat columns."""
@@ -120,10 +95,6 @@ class GuitarTabParser:
         else:
             string.chars = string.chars[n:]
     
-    def parse_note(self, tab_note_symbol):
-        """Create a tab_note_model (textx) from a tab_note_symbol string."""
-        return self.tab_note_metamodel.model_from_str(tab_note_symbol)
-    
     def _note_num_from_fret(self, fret, string_height):
         """Calculates a note number."""
         # base is the lowest E-0
@@ -138,13 +109,8 @@ class GuitarTabParser:
                   }[string_height]
         return base + string + int(fret)
     
-    def parse_tablature_string(self, tab_string):
-        """Extracts tablature string model and then parses it."""
-        tab_strings_model = self.extract_strings(tab_string)
-        return self.parse_tablature_model(tab_strings_model)
-    
-    def parse_tablature_model(self, tab_model):
-        """Parses the tablature string model and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with TabNotes."""
+    def process_tablature_model(self, tab_model):
+        """Parses the tablature model and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with TabNotes."""
         
         tab_note_symbols = self.extract_note_symbols(tab_model)
         
@@ -158,7 +124,7 @@ class GuitarTabParser:
             # add every note to note_container
             for note_symbol, string in zip(beat, tab_model.strings):
                 
-                note_model = self.parse_note(note_symbol)
+                note_model = self.get_note_model(note_symbol)
                 
                 # skip rests
                 if note_model == '-':
@@ -172,4 +138,43 @@ class GuitarTabParser:
             ret.append(note_container)
         
         return ret
+    
+class GuitarTabParser:
+    """
+    Parses tablatures in form of:
+    e|-0-----10-3-||
+    B|-------1--1-||
+    G|-12pm-----6-||
+    D|-2-----9--0-||
+    A|-2-----3--2-||
+    E|------------||
+    
+    All notes must be separated by a dash '-' and they can be of arbitrary length (with parameters),
+    every note must be followed by additional dashes for the length of the longest note in a column,
+    all strings must be of equal length and each one must start with '|-' and end with '-||'
+    """
+    
+    def __init__(self, tab_grammar_file=None):
+        """Initializes metamodel and processor, if metamodel file is not specified initialize with default file."""
+        self.processor = GuitarTabProcessor()
+        
+        if not tab_grammar_file:
+            tab_grammar_file = GRAMMAR_PATH + "guitar_tab.tx"
+        
+        self.tab_metamodel = metamodel_from_file(tab_grammar_file)
+        self.tab_metamodel.register_obj_processors({'String': remove_end_pipes})
+        
+    def get_strings_model(self, tab_string):
+        """Extracts guitar tablature model (textx) from a tab_string."""        
+        return self.tab_metamodel.model_from_str(tab_string)
+    
+    def parse_tablature_string(self, tab_string):
+        """Extracts tablature string model and then parses it."""
+        tab_strings_model = self.get_strings_model(tab_string)
+        return self.processor.process_tablature_model(tab_strings_model)
+
+def remove_end_pipes(tab_string):
+    """remove trailing '||'"""
+    tab_string.chars = tab_string.chars[:-2]
+    
     

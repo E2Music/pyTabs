@@ -15,14 +15,16 @@ class TablatureProcessor:
     Processes tablature model.
     """
     
-    def __init__(self, process_note, additional_dashes=0):
+    def __init__(self, process_note, additional_dashes=0, container_type=NoteContainer):
         """
         Accepts a process_note(note_symbol, mark_symbol) callable  
-        that returns an instance of mingus Note or its subclass.
+        that returns a recognised object that can be stored in a container_type (NoteContainer by default).
+        A number of additional dashes can be ignored following each note, specified by additional_dashes parameter.
         """
         assert process_note is not None
         self.process_note = process_note
         self.additional_dashes = additional_dashes
+        self.container_type = container_type
     
     def extract_note_symbols(self, tab_strings_model, additional_dashes=0):
         """Extracts note characters from tab_strings_model and place them in a list of beat columns."""
@@ -99,26 +101,26 @@ class TablatureProcessor:
         beats = self.extract_note_symbols(tab_model, self.additional_dashes)
         mark_symbols = self.extract_string_marks(tab_model)
         
-        # list of NoteContainer instances
-        note_containers = []
+        # list of container_type instances
+        container_list = []
         
-        # for every beat add a NoteContainer
+        # for every beat add a container
         for beat in beats:
             
-            note_container = NoteContainer()
+            container = self.container_type()
             
             for note_symbol, mark_symbol in zip(beat, mark_symbols):
                 
                 # process the note_symbol and mark_symbol and get a Note instance
                 note = self.process_note(note_symbol, mark_symbol)
                 
-                # add every note that is not None to note_container
+                # add every note that is not None to container
                 if note:
-                    note_container.add_note(note)
+                    container += [note]
             
-            note_containers.append(note_container)
+            container_list.append(container)
         
-        return note_containers
+        return container_list
 
 class TablatureParser:
     """

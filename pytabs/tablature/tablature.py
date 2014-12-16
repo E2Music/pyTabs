@@ -15,13 +15,14 @@ class TablatureProcessor:
     Processes tablature model.
     """
     
-    def __init__(self, process_note):
+    def __init__(self, process_note, additional_dashes=0):
         """
         Accepts a process_note(note_symbol, mark_symbol) callable  
         that returns an instance of mingus Note or its subclass.
         """
         assert process_note is not None
         self.process_note = process_note
+        self.additional_dashes = additional_dashes
     
     def extract_note_symbols(self, tab_strings_model, additional_dashes=0):
         """Extracts note characters from tab_strings_model and place them in a list of beat columns."""
@@ -92,10 +93,10 @@ class TablatureProcessor:
         else:
             return string[n:]
     
-    def process_tablature_model(self, tab_model, additional_dashes=0):
+    def process_tablature_model(self, tab_model):
         """Processes the tablature model (using note_processor) and returns a list of mingus NoteContainers that represent beats (columns in the tablature) filled with mingus Notes."""
         
-        beats = self.extract_note_symbols(tab_model, additional_dashes)
+        beats = self.extract_note_symbols(tab_model, self.additional_dashes)
         mark_symbols = self.extract_string_marks(tab_model)
         
         # list of NoteContainer instances
@@ -134,9 +135,9 @@ class TablatureParser:
     all strings must be of equal length and each one must start with '|-' and end with '-||'
     """
     
-    def __init__(self, note_processor, tab_grammar_file=None):
+    def __init__(self, note_processor, tab_grammar_file=None, additional_dashes=0):
         """Initializes metamodel and processor, if metamodel file is not specified initialize with default file."""
-        self.processor = TablatureProcessor(note_processor)
+        self.processor = TablatureProcessor(note_processor, additional_dashes)
         
         if not tab_grammar_file:
             tab_grammar_file = GRAMMAR_PATH + "tablature.tx"
@@ -144,10 +145,10 @@ class TablatureParser:
         self.tab_metamodel = metamodel_from_file(tab_grammar_file)
         self.tab_metamodel.register_obj_processors({'String': process_tab_string})
     
-    def parse_tablature_string(self, tab_string, additional_dashes=0):
+    def parse_tablature_string(self, tab_string):
         """Extracts tablature string model (textx) and then parses it."""
         tab_strings_model = self.tab_metamodel.model_from_str(tab_string)
-        return self.processor.process_tablature_model(tab_strings_model, additional_dashes)
+        return self.processor.process_tablature_model(tab_strings_model)
 
 def process_tab_string(tab_string):
     """Process a String object."""

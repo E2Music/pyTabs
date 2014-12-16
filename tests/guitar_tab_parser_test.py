@@ -149,7 +149,8 @@ class Test(unittest.TestCase):
         self.assertEquals(len(self.parser.parse_tablature_string(self.test_tab_multiple_columns)), 3)
     
     def test_additional_dashes(self):
-        self.assertEquals(len(self.parser.parse_tablature_string(self.test_tab_additional_dashes, 2)), 3)
+        self.parser.processor.additional_dashes = 2
+        self.assertEquals(len(self.parser.parse_tablature_string(self.test_tab_additional_dashes)), 3)
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

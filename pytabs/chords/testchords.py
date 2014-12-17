@@ -11,7 +11,6 @@ i akord bez pridruzene INT vrednosti,
     
 """
 import os
-import os
 from types import NoneType
 
 from mingus.containers import NoteContainer
@@ -89,15 +88,11 @@ class Music:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_decor_prep(c)
                             suffixchord = self._suffix_decor_prep(c)
-                            
-                            print("{}/{}".format(prefixchord, suffixchord))
                             chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
                             suffixchord = self._suffix_decor_no_prep(c)
-                            
-                            print("{}/{}".format(prefixchord, suffixchord))
                             chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                     #nema povislicu ili snizilicu
                     else:
@@ -105,47 +100,32 @@ class Music:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
                             suffixchord = self._suffix_no_decor_prep(c)
-                            
-                            print("{}/{}".format(prefixchord, suffixchord))
                             chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
                             suffixchord = self._suffix_no_decor_no_prep(c)
-                            
-                            print("{}/{}".format(prefixchord, suffixchord))
                             chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                 else:
                     #ima povisilicu ili snizilicu
                     if(c.prefix.decor):
-                        
                         #ima molove majeve susove divove itd
                         if(c.prefix.prep):
                             prefixchord = self._prefix_decor_prep(c)
-                            
-                            print("{}".format(prefixchord))
                             chords.append(self._add_note("{}".format(prefixchord)))
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
-                            
-                            #print("{}".format(prefixchord)) 
                             chords.append(self._add_note("{}".format(prefixchord)))
                     #nema povislicu ili snizilicu
                     else:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
-                            
-                            print("{}".format(prefixchord))
                             chords.append(self._add_note("{}".format(prefixchord)))
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
-                            
-                            print("{}".format(prefixchord))
                             chords.append(self._add_note("{}".format(prefixchord)))
             else:
-                #print("pause {}".format(c.time))
                 pause = PauseChord(duration=c.time)
-                print pause
                 chords.append(pause)
         
         self.akordi = [x for x in chords]
@@ -192,21 +172,20 @@ class GuitarChordProcessor(object):
         #'examples/rythm.mcx'
         self.guitar_chords_model = self.guitar_chords_mm.model_from_file(file_path)
         
+    def guitarchords_model_from_str(self, model_str):
+        self.guitar_chords_model = self.guitar_chords_mm.model_from_str(model_str)
+        
     def guitarmodel_interprete(self):
         music = Music()
         music.interpret(self.guitar_chords_model)
+        
+        return music.akordi
     
 if __name__ == "__main__":
-    robot_mm = metamodel_from_file('grammer/chords.tx', debug=False)
-    robot_mm.register_obj_processors({'BaseExtended': move_command_processor,
-                                      "PrepExtended":move_command_processor,
-                                      "DecorateExtended":move_command_processor})
+    gpc = GuitarChordProcessor('grammer/chords.tx')
+    gpc.guitarchords_model_from_file('examples/rythm2.mcx')
+    akords = gpc.guitarmodel_interprete()
     
-    robot_model = robot_mm.model_from_file('examples/rythm2.mcx')
+    for b in akords:
+        print b
     
-    music = Music()
-    music.interpret(robot_model)
-    
-    print "-----"*4
-
-    print music.akordi

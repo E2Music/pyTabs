@@ -4,15 +4,18 @@ Created on Nov 27, 2014
 @author: Milos
 '''
 """
-    Procesor koji ce u slucaju da se pojavi akord bez pridruzene INT vrednosti, 
+i akord bez pridruzene INT vrednosti, 
     prebaciti 0 u prazan string. Na ovaj nacin mingus moze da svira samo akord.
     
     Args:move_cmd model koji se proverava
     
 """
 import os
+import os
 from types import NoneType
 
+from mingus.containers import NoteContainer
+from mingus.core.chords import from_shorthand
 from textx.metamodel import metamodel_from_file
 
 
@@ -25,7 +28,7 @@ def move_command_processor(move_cmd):
     fajla na osnovu zadate gramatike
 """
 class Music:
-    
+
     def _prefix_decor_prep(self, c):
         prefixret = "".join([c.prefix.chord.base,str(c.prefix.chord.number),
                              c.prefix.decor.name,str(c.prefix.decor.number),
@@ -68,6 +71,12 @@ class Music:
         
         return suffixret
     
+    def _add_note(self, note_name):
+        n = NoteContainer()
+        n.add_notes(from_shorthand(note_name))
+        
+        return n
+    
     def interpret(self, model):
         chords = []
         
@@ -82,14 +91,14 @@ class Music:
                             suffixchord = self._suffix_decor_prep(c)
                             
                             print("{}/{}".format(prefixchord, suffixchord))
-                            chords.append("{}/{}".format(prefixchord, suffixchord))
+                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
                             suffixchord = self._suffix_decor_no_prep(c)
                             
                             print("{}/{}".format(prefixchord, suffixchord))
-                            chords.append("{}/{}".format(prefixchord, suffixchord))
+                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                     #nema povislicu ili snizilicu
                     else:
                         pass
@@ -98,13 +107,13 @@ class Music:
                             suffixchord = self._suffix_no_decor_prep(c)
                             
                             print("{}/{}".format(prefixchord, suffixchord))
-                            chords.append("{}/{}".format(prefixchord, suffixchord))
+                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
                             suffixchord = self._suffix_no_decor_no_prep(c)
                             
                             print("{}/{}".format(prefixchord, suffixchord))
-                            chords.append("{}/{}".format(prefixchord, suffixchord))
+                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
                 else:
                     #ima povisilicu ili snizilicu
                     if(c.prefix.decor):
@@ -114,27 +123,44 @@ class Music:
                             prefixchord = self._prefix_decor_prep(c)
                             
                             print("{}".format(prefixchord))
-                            chords.append("{}".format(prefixchord))
+                            chords.append(self._add_note("{}".format(prefixchord)))
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
                             
-                            print("{}".format(prefixchord)) 
-                            chords.append("{}".format(prefixchord))
+                            #print("{}".format(prefixchord)) 
+                            chords.append(self._add_note("{}".format(prefixchord)))
                     #nema povislicu ili snizilicu
                     else:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
                             
                             print("{}".format(prefixchord))
-                            chords.append("{}".format(prefixchord))
+                            chords.append(self._add_note("{}".format(prefixchord)))
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
+                            
                             print("{}".format(prefixchord))
-                            chords.append("{}".format(prefixchord))
+                            chords.append(self._add_note("{}".format(prefixchord)))
             else:
-                print("pause {}".format(c.time))
+                #print("pause {}".format(c.time))
+                pause = PauseChord(duration=c.time)
+                print pause
+                chords.append(pause)
+        
+        self.akordi = [x for x in chords]
 
+class PauseChord(object):
+    def __init__(self,duration):
+        self.value = None
+        self.duration = duration
+        self.name = "Pause"
+        
+    def __str__(self, *args, **kwargs):
+        return "{} {}".format(self.name, self.duration)
+    
+    def __repr__(self, *args, **kwargs):
+        return  self.__str__()
 
 GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
 
@@ -176,7 +202,11 @@ if __name__ == "__main__":
                                       "PrepExtended":move_command_processor,
                                       "DecorateExtended":move_command_processor})
     
-    robot_model = robot_mm.model_from_file('examples/rythm.mcx')
+    robot_model = robot_mm.model_from_file('examples/rythm2.mcx')
     
     music = Music()
     music.interpret(robot_model)
+    
+    print "-----"*4
+
+    print music.akordi

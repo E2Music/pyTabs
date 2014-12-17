@@ -1,0 +1,23 @@
+/*
+Guitar tablature note grammar:
+
+example:
+1
+12
+5pm
+-
+
+*/
+
+MusicSymbol:
+	Note|Rest
+;
+
+Note:
+	fret=/^\d+/
+	pm?='pm'
+;
+
+Rest:
+	'-'
+;

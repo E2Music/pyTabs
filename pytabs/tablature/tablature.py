@@ -89,9 +89,9 @@ class TablatureProcessor:
         if n == 0:
             return string
         elif len(string) == 0:
-            raise ParsingException("expected '-'")
+            raise ParsingException("expected '-' at: "+string)
         elif not all(c == '-' for c in string[:n]):
-            raise ParsingException("expected '-'")
+            raise ParsingException("expected '-' at: "+string)
         else:
             return string[n:]
     

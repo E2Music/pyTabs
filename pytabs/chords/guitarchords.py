@@ -3,19 +3,14 @@ Created on Nov 27, 2014
 
 @author: Milos
 '''
-"""
-    Klasa koja opisuje model akorada koji se dobijaju parsiranjem ulaznog
-    fajla na osnovu zadate gramatike
-"""
-
 import os
-
 from mingus.containers import NoteContainer
 from mingus.core.chords import from_shorthand
 from textx.metamodel import metamodel_from_file
-
 import pytabs
 
+#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammer/'
 
 class Music:
 
@@ -121,11 +116,12 @@ class Music:
         
         self.akordi = [x for x in chords]
 
-"""
-    Class that represent a pose Chord. 
-    Args (int) duration :duration of time how long pause will last
-"""
 class PauseChord(object):
+    """
+        Class that represent a pose Chord. 
+        Args (int) duration :duration of time how long pause will last
+    """
+    
     def __init__(self,duration):
         self.value = None
         self.duration = duration
@@ -136,9 +132,6 @@ class PauseChord(object):
     
     def __repr__(self, *args, **kwargs):
         return  self.__str__()
-
-#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
-GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammer/chords.tx'
 
 def chord_command_processor(move_cmd):
     """
@@ -151,18 +144,19 @@ def chord_command_processor(move_cmd):
     if move_cmd.number == 0:
         move_cmd.number = ""
 
-"""
-    Class that will take file where chords are and/or take model of chords
-    Args:
-        (string):guitar_chords_grammar_file where grammer that
-        represent chords is
-        guitar_model (textx model):model to process 
-"""
 class GuitarChordProcessor(object):
+    """
+        Class that will take file where chords are and/or take model of chords
+        Args:
+            (string):guitar_chords_grammar_file where grammer that
+            represent chords is
+            guitar_model (textx model):model to process 
+    """
+    
     def __init__(self, guitar_chords_grammar_file=None, guitar_model = None):
         
         if not guitar_chords_grammar_file:
-            guitar_chords_grammar_file = GRAMMAR_PATH
+            guitar_chords_grammar_file = GRAMMAR_PATH +'chords.tx'
         
         self.guitar_chords_mm = metamodel_from_file(guitar_chords_grammar_file, debug=False)
         self.guitar_chords_mm.register_obj_processors({'BaseExtended': chord_command_processor,
@@ -172,17 +166,34 @@ class GuitarChordProcessor(object):
         #guitar_chords_model = guitar_chords_mm.model_from_file('examples/rythm.mcx')
             
     def guitarchords_model_from_file(self, file_path):
-        #'examples/rythm.mcx'
+        """
+            Read sample from file and trasport it to metamodel in text
+            Args:
+                file_path (string):path where sample is
+        """
+        
         self.guitar_chords_model = self.guitar_chords_mm.model_from_file(file_path)
         
     def guitarchords_model_from_str(self, model_str):
+        """
+            Read sample from string and trasport it to metamodel in text
+            Args:
+                file_path (string):string of sample
+        """
+        
         self.guitar_chords_model = self.guitar_chords_mm.model_from_str(model_str)
         
     def guitarmodel_interprete(self):
+        """
+            For a givem metamodel prepare model by iterate trough metamodel
+        """
+        
         music = Music()
         music.interpret(self.guitar_chords_model)
         
         return music.akordi
+
+
     
 if __name__ == "__main__":
     

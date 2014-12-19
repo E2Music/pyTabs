@@ -19,12 +19,12 @@ class Song:
         for seq in model.sequences:
             print("{} {}".format(seq.type,seq.name))
         
-            if(seq.value.__class__.__name__=="GuitarChords"):
+            if(seq.value.__class__.__name__=="GuitarChords" and seq.type == "guitar-rhythm"):
                 gpc = GuitarChordProcessor(guitar_model=seq.value)
                 akords = gpc.guitarmodel_interprete()
                 
                 print akords
-            elif(seq.value.__class__.__name__=="Tablature"):
+            elif(seq.value.__class__.__name__=="Tablature" and seq.type == "guitar-solo"):
                 processor = TablatureProcessor(GuitarNoteProcessor())
                 res = processor.process_tablature_model(seq.value)
                 print res

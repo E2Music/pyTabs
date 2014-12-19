@@ -1,5 +1,5 @@
 import chords
-import tablature.grammar
+import tablature
 
 Program:
 	header=SongHeader
@@ -29,7 +29,7 @@ InstrumentType:
 ;
 
 SourceType:
-	GuitarChords|..tablature.grammar.Tablature
+	Tablature|GuitarChords
 ;
 
 Comment:

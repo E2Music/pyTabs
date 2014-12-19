@@ -4,11 +4,15 @@ Created on Dec 12, 2014
 @author: zeljko.bal
 '''
 from os.path import os
-from textx.metamodel import metamodel_from_file
+
 from mingus.containers.Note import Note
+from textx.metamodel import metamodel_from_file
+
+import pytabs
 
 
-GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammer/'
 
 class TabNote(Note, object):
     """Mingus Note with additional parameters."""

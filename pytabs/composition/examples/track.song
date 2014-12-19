@@ -11,9 +11,14 @@ sequence guitar-rhythm "Monkey"
 C Dm
 }
 
-sequence guitar-solo "Head"
-{
-A E
+sequence guitar-solo "Head"{
+e|-0----10-3-||
+B|-0----1--1-||
+G|-12pm----6-||
+D|-2----9--0-||
+A|-2----3--2-||
+E|-----------||
+
 }
 
 sequence bass "Fildey"

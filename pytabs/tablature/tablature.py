@@ -4,11 +4,14 @@ Created on Dec 13, 2014
 @author: zeljko.bal
 '''
 from os.path import os
-from textx.metamodel import metamodel_from_file
+
 from mingus.containers.NoteContainer import NoteContainer
+from textx.metamodel import metamodel_from_file
+import pytabs
 
 
-GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammer/'
 
 class TablatureProcessor:
     """

@@ -4,28 +4,19 @@ Created on Nov 27, 2014
 @author: Milos
 '''
 """
-i akord bez pridruzene INT vrednosti, 
-    prebaciti 0 u prazan string. Na ovaj nacin mingus moze da svira samo akord.
-    
-    Args:move_cmd model koji se proverava
-    
+    Klasa koja opisuje model akorada koji se dobijaju parsiranjem ulaznog
+    fajla na osnovu zadate gramatike
 """
+
 import os
-from types import NoneType
 
 from mingus.containers import NoteContainer
 from mingus.core.chords import from_shorthand
 from textx.metamodel import metamodel_from_file
 
+import pytabs
 
-def move_command_processor(move_cmd):
-    if move_cmd.number == 0:
-        move_cmd.number = ""
 
-"""
-    Klasa koja opisuje model akorada koji se dobijaju parsiranjem ulaznog
-    fajla na osnovu zadate gramatike
-"""
 class Music:
 
     def _prefix_decor_prep(self, c):
@@ -130,6 +121,10 @@ class Music:
         
         self.akordi = [x for x in chords]
 
+"""
+    Class that represent a pose Chord. 
+    Args (int) duration :duration of time how long pause will last
+"""
 class PauseChord(object):
     def __init__(self,duration):
         self.value = None
@@ -142,31 +137,39 @@ class PauseChord(object):
     def __repr__(self, *args, **kwargs):
         return  self.__str__()
 
-GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammer/chords.tx'
 
+def chord_command_processor(move_cmd):
+    """
+    Procesor koji ce u slucaju da se pojavi akord bez pridruzene INT vrednosti, 
+    prebaciti 0 u prazan string. Na ovaj nacin mingus moze da svira samo akord.
+        
+    Args:move_cmd model koji se proverava
+        
+    """
+    if move_cmd.number == 0:
+        move_cmd.number = ""
+
+"""
+    Class that will take file where chords are and/or take model of chords
+    Args:
+        (string):guitar_chords_grammar_file where grammer that
+        represent chords is
+        guitar_model (textx model):model to process 
+"""
 class GuitarChordProcessor(object):
-    def __init__(self, guitar_chords_grammar_file=None):
+    def __init__(self, guitar_chords_grammar_file=None, guitar_model = None):
         
         if not guitar_chords_grammar_file:
-            guitar_chords_grammar_file = GRAMMAR_PATH + "chords.tx"
+            guitar_chords_grammar_file = GRAMMAR_PATH
         
         self.guitar_chords_mm = metamodel_from_file(guitar_chords_grammar_file, debug=False)
-        self.guitar_chords_mm.register_obj_processors({'BaseExtended': self.chord_command_processor,
-                                      "PrepExtended":move_command_processor,
-                                      "DecorateExtended":move_command_processor})
+        self.guitar_chords_mm.register_obj_processors({'BaseExtended': chord_command_processor,
+                                      "PrepExtended":chord_command_processor,
+                                      "DecorateExtended":chord_command_processor})
+        self.guitar_chords_model = guitar_model
         #guitar_chords_model = guitar_chords_mm.model_from_file('examples/rythm.mcx')
-        
-    
-    def chord_command_processor(self,move_cmd):
-        """
-        Procesor koji ce u slucaju da se pojavi akord bez pridruzene INT vrednosti, 
-        prebaciti 0 u prazan string. Na ovaj nacin mingus moze da svira samo akord.
-        
-        Args:move_cmd model koji se proverava
-        
-        """
-        if move_cmd.number == 0:
-            move_cmd.number = ""
             
     def guitarchords_model_from_file(self, file_path):
         #'examples/rythm.mcx'
@@ -182,7 +185,9 @@ class GuitarChordProcessor(object):
         return music.akordi
     
 if __name__ == "__main__":
-    gpc = GuitarChordProcessor('grammer/chords.tx')
+    
+    root_dir = os.path.abspath(os.path.dirname(pytabs.__file__))
+    gpc = GuitarChordProcessor()
     gpc.guitarchords_model_from_file('examples/rythm2.mcx')
     akords = gpc.guitarmodel_interprete()
     

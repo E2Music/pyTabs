@@ -3,6 +3,7 @@ import tablature
 
 Program:
 	header=SongHeader
+	("import" soundfonts*=SoundFont)?
 	sequences*=SongSequence
 ;
 
@@ -30,6 +31,10 @@ InstrumentType:
 
 SourceType:
 	Tablature|GuitarChords
+;
+
+SoundFont:
+	name=STRING path=STRING
 ;
 
 Comment:

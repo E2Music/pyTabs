@@ -4,7 +4,9 @@ Created on Dec 13, 2014
 @author: Milos
 '''
 import os
+
 from textx.metamodel import metamodel_from_file
+
 import pytabs
 from pytabs.chords.guitarchords import GuitarChordProcessor, chord_command_processor
 from pytabs.guitar.guitar_tablature import GuitarNoteProcessor
@@ -16,9 +18,13 @@ class Song:
         print(" {} \n {} \n {}/{} \n {}".format(model.header.name,model.header.author,
                                             model.header.beatup,model.header.beatdown,
                                             model.header.tempo))
+        
+        if model.soundfonts:
+            for sf in model.soundfonts:
+                print "{} {}".format(sf.name, sf.path)
+        
         for seq in model.sequences:
             print("{} {}".format(seq.type,seq.name))
-        
             if(seq.value.__class__.__name__=="GuitarChords" and seq.type == "guitar-rhythm"):
                 gpc = GuitarChordProcessor(guitar_model=seq.value)
                 akords = gpc.guitarmodel_interprete()

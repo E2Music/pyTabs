@@ -5,6 +5,10 @@
 	Tempo 120
 ]
 
+import 
+"milos" "simic"
+"petar" "petrovic"
+
 //ovde svira samo Monkey
 sequence guitar-rhythm "Monkey"
 {

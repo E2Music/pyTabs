@@ -10,7 +10,6 @@ from textx.metamodel import metamodel_from_file
 import pytabs
 
 
-#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammer/'
 
 class TablatureProcessor:
@@ -148,17 +147,11 @@ class TablatureParser:
             tab_grammar_file = GRAMMAR_PATH + "tablature.tx"
         
         self.tab_metamodel = metamodel_from_file(tab_grammar_file)
-        self.tab_metamodel.register_obj_processors({'String': process_tab_string})
     
     def parse_tablature_string(self, tab_string):
         """Extracts tablature string model (textx) and then parses it."""
         tab_strings_model = self.tab_metamodel.model_from_str(tab_string)
         return self.processor.process_tablature_model(tab_strings_model)
-
-def process_tab_string(tab_string):
-    """Process a String object."""
-    # remove trailing '||' from chars
-    tab_string.chars = tab_string.chars[:-2]
     
 class ParsingException(Exception):
     def __init__(self, args):

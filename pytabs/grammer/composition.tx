@@ -44,15 +44,15 @@ SourceType:
 ;
 
 TimelineSegment:
-	"segment" name=ID "{" instrument=[SongSequence] ":" soundfont=[SoundFont] "}"
+	"segment" name=ID "{" segmentlist*=TimelineSegmentList "}"
+;
+
+TimelineSegmentList:
+	sequence=[SongSequence] ":" soundfont=[SoundFont]
 ;
 
 Timeline:
-	"timeline" "{" tracks*=TimelinePart "}"
-;
-
-TimelinePart:
-	name=STRING ":" sequence+=[SongSequence][","]
+	"timeline" "{" tracks*=[TimelineSegment][","] "}"
 ;
 
 Comment:

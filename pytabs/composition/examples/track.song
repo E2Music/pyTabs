@@ -6,8 +6,9 @@
 ]
 
 import 
-milos "simic"
-petar "petrovic"
+saruman "thewhite"
+radagast "thebrown"
+gandalf "thegray"
 
 //ovde svira samo Monkey
 sequence guitar-rhythm Monkey
@@ -30,18 +31,19 @@ sequence bass Fildey
 F G
 }
 
-segment Milos 
+segment Chorus 
 {
-	Head : milos
+	Head : gandalf
+	Fildey : radagast
 }
 
-segment Petar 
+segment End 
 {
-	Fildey : petar
+	Monkey : gandalf
+	Fildey : radagast
 }
 
 timeline
 {
-	"Chorus" : Head,Monkey
-	"Solo" : Monkey,Fildey
+	Chorus,End
 }

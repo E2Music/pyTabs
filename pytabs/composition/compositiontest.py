@@ -38,17 +38,18 @@ class Song:
                 print res
         
         print "---------"*4
-                
-        for track in model.timeline.tracks:
-            for seq in track.sequence:
-                print seq.type
-
-        print "---------"*4
         
         for segment in model.segments:
-            print("{} {} {}".format(segment.name,
-                                    segment.instrument.type,
-                                    segment.soundfont.name))
+            print segment.name
+            
+        print "---------"*4
+        
+        for track in model.timeline.tracks:
+            for part in track.segmentlist:
+                print("{} {}".format(part.sequence.name,
+                                     part.soundfont.name))
+
+        print "---------"*4
 
 if __name__ == "__main__":
     root_dir = os.path.abspath(os.path.dirname(pytabs.__file__))

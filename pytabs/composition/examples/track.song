@@ -1,0 +1,49 @@
+[
+	Name "Test"
+	Author "Milos"
+	Beat 4/4
+	Tempo 120
+]
+
+import 
+saruman "thewhite"
+radagast "thebrown"
+gandalf "thegray"
+
+//ovde svira samo Monkey
+sequence guitar-rhythm Monkey
+{
+C(8) Dm
+}
+
+sequence guitar-solo Head{
+e|-0----10-3-||
+B|-0----1--1-||
+G|-12pm----6-||
+D|-2----9--0-||
+A|-2----3--2-||
+E|-----------||
+
+}
+
+sequence bass Fildey
+{
+F G
+}
+
+segment Chorus 
+{
+	Head : gandalf
+	Fildey : radagast
+}
+
+segment End 
+{
+	Monkey : gandalf
+	Fildey : radagast
+}
+
+timeline
+{
+	Chorus,End
+}

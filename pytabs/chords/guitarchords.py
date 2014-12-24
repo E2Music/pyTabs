@@ -9,7 +9,7 @@ from mingus.core.chords import from_shorthand
 from textx.metamodel import metamodel_from_file
 import pytabs
 
-#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
 
 class Music:

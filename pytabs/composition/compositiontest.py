@@ -34,6 +34,12 @@ class Song:
                 processor = TablatureProcessor(GuitarNoteProcessor())
                 res = processor.process_tablature_model(seq.value)
                 print res
+        
+        print "---------"*4
+                
+        for track in model.timeline.tracks:
+            for seq in track.sequence:
+                print seq.type
 
 
 

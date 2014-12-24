@@ -10,12 +10,12 @@ import
 "petar" "petrovic"
 
 //ovde svira samo Monkey
-sequence guitar-rhythm "Monkey"
+sequence guitar-rhythm Monkey
 {
 C Dm
 }
 
-sequence guitar-solo "Head"{
+sequence guitar-solo Head{
 e|-0----10-3-||
 B|-0----1--1-||
 G|-12pm----6-||
@@ -25,7 +25,13 @@ E|-----------||
 
 }
 
-sequence bass "Fildey"
+sequence bass Fildey
 {
 F G
+}
+
+timeline
+{
+	"Chorus" : Head,Monkey
+	"Solo" : Monkey,Fildey
 }

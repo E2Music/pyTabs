@@ -1,0 +1,60 @@
+import chords
+import tablature
+
+Program:
+	header=SongHeader
+	imports=SoundFontImport
+	sequences*=SongSequence
+	segments*=TimelineSegment
+	timeline=Timeline
+;
+
+SongHeader:
+"["
+	"Name" name=STRING
+	"Author" author=STRING
+	"Beat" beatup=INT "/" beatdown=INT
+	"Tempo" tempo=INT
+"]"
+;
+
+SoundFontImport:
+	"import" soundfonts*=SoundFont
+;
+
+SoundFont:
+	name=ID path=STRING
+;
+
+SongSequence:
+	"sequence" type=InstrumentType name=ID 
+	"{"
+	
+	value=SourceType 
+	
+	"}"
+;
+
+InstrumentType:
+	"guitar-solo"|"guitar-rhythm"|"drums"|"keyboards"|"bass"|"electro"
+;
+
+SourceType:
+	Tablature|GuitarChords
+;
+
+TimelineSegment:
+	"segment" name=ID "{" segmentlist*=TimelineSegmentList "}"
+;
+
+TimelineSegmentList:
+	sequence=[SongSequence] ":" soundfont=[SoundFont]
+;
+
+Timeline:
+	"timeline" "{" tracks*=[TimelineSegment][","] "}"
+;
+
+Comment:
+  /\/\/.*$/
+;

@@ -53,7 +53,7 @@ class Song:
 
 if __name__ == "__main__":
     root_dir = os.path.abspath(os.path.dirname(pytabs.__file__))
-    robot_mm = metamodel_from_file(root_dir+'/grammer/composition.tx', debug=False)
+    robot_mm = metamodel_from_file(root_dir+'/grammar/composition.tx', debug=False)
     robot_mm.register_obj_processors({'BaseExtended': chord_command_processor,
                                       "PrepExtended": chord_command_processor,
                                       "DecorateExtended":chord_command_processor})

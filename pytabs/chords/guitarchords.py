@@ -10,7 +10,7 @@ from textx.metamodel import metamodel_from_file
 import pytabs
 from types import NoneType
 
-#GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
+
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
 
 DEFAULT_CHORD_DURATION = 4

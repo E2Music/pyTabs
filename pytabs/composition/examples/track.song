@@ -6,8 +6,8 @@
 ]
 
 import 
-"milos" "simic"
-"petar" "petrovic"
+milos "simic"
+petar "petrovic"
 
 //ovde svira samo Monkey
 sequence guitar-rhythm Monkey
@@ -28,6 +28,16 @@ E|-----------||
 sequence bass Fildey
 {
 F G
+}
+
+segment Milos 
+{
+	Head : milos
+}
+
+segment Petar 
+{
+	Fildey : petar
 }
 
 timeline

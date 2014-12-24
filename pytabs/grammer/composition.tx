@@ -5,6 +5,7 @@ Program:
 	header=SongHeader
 	imports=SoundFontImport
 	sequences*=SongSequence
+	segments*=TimelineSegment
 	timeline=Timeline
 ;
 
@@ -19,6 +20,10 @@ SongHeader:
 
 SoundFontImport:
 	"import" soundfonts*=SoundFont
+;
+
+SoundFont:
+	name=ID path=STRING
 ;
 
 SongSequence:
@@ -38,8 +43,8 @@ SourceType:
 	Tablature|GuitarChords
 ;
 
-SoundFont:
-	name=STRING path=STRING
+TimelineSegment:
+	"segment" name=ID "{" instrument=[SongSequence] ":" soundfont=[SoundFont] "}"
 ;
 
 Timeline:

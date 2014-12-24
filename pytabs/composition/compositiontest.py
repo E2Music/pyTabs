@@ -18,9 +18,12 @@ class Song:
         print(" {} \n {} \n {}/{} \n {}".format(model.header.name,model.header.author,
                                             model.header.beatup,model.header.beatdown,
                                             model.header.tempo))
-        
+        print "---------"*4
+         
         for sf in model.imports.soundfonts:
             print "{} {}".format(sf.name, sf.path)
+        
+        print "---------"*4
         
         for seq in model.sequences:
             print("{} {}".format(seq.type,seq.name))
@@ -40,7 +43,12 @@ class Song:
             for seq in track.sequence:
                 print seq.type
 
-
+        print "---------"*4
+        
+        for segment in model.segments:
+            print("{} {} {}".format(segment.name,
+                                    segment.instrument.type,
+                                    segment.soundfont.name))
 
 if __name__ == "__main__":
     root_dir = os.path.abspath(os.path.dirname(pytabs.__file__))

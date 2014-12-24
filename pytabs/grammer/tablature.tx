@@ -24,6 +24,7 @@ String:
 	// a word followed by dashes
 	mark=/(\w)+(-)*/
 	'|-'
-	// a string of words and dashes with '-||' at the end
-	chars=/[\w-]+-\|\|/
+	// a string of words and dashes with '-' at the end
+	chars=/[\w-]+-/
+	'||'
 ;

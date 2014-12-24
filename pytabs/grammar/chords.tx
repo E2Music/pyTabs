@@ -11,11 +11,15 @@ Pause:
 ;
 
 ChordExtended:
-	prefix=Chord ("/" suffix=Chord)?
+	prefix=Chord ("/" suffix=Chord)? (duration=ChordDuration)?
 ;
 
 Chord:
 	chord=BaseExtended (decor=DecorateExtended)? (prep=PrepExtended)?
+;
+
+ChordDuration:
+	"(" (time=INT)? ")"
 ;
 
 DecorateExtended:

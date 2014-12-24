@@ -8,7 +8,7 @@ import os
 from textx.metamodel import metamodel_from_file
 
 import pytabs
-from pytabs.chords.guitarchords import GuitarChordProcessor, chord_command_processor
+from pytabs.chords.guitarchords import GuitarChordProcessor, chord_command_processor, chord_interval_processor
 from pytabs.guitar.guitar_tablature import GuitarNoteProcessor
 from pytabs.tablature.tablature import TablatureProcessor
 
@@ -56,7 +56,8 @@ if __name__ == "__main__":
     robot_mm = metamodel_from_file(root_dir+'/grammar/composition.tx', debug=False)
     robot_mm.register_obj_processors({'BaseExtended': chord_command_processor,
                                       "PrepExtended": chord_command_processor,
-                                      "DecorateExtended":chord_command_processor})
+                                      "DecorateExtended":chord_command_processor,
+                                      "ChordDuration":chord_interval_processor})
     
     robot_model = robot_mm.model_from_file('examples/track.song')
     

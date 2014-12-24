@@ -13,7 +13,7 @@ gandalf "thegray"
 //ovde svira samo Monkey
 sequence guitar-rhythm Monkey
 {
-C Dm
+C(8) Dm
 }
 
 sequence guitar-solo Head{

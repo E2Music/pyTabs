@@ -8,9 +8,12 @@ from mingus.containers import NoteContainer
 from mingus.core.chords import from_shorthand
 from textx.metamodel import metamodel_from_file
 import pytabs
+from types import NoneType
 
 #GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
+
+DEFAULT_CHORD_DURATION = 4
 
 class Music:
 
@@ -62,6 +65,9 @@ class Music:
         
         return n
     
+    def _interval_time(self, chord):
+        return chord.duration.time if type(chord.duration) is not NoneType else DEFAULT_CHORD_DURATION
+    
     def interpret(self, model):
         chords = []
         
@@ -74,45 +80,54 @@ class Music:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_decor_prep(c)
                             suffixchord = self._suffix_decor_prep(c)
-                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
+                            container = (self._add_note("{}/{}".format(prefixchord, suffixchord)),self._interval_time(c))
+                            chords.append(container)
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
                             suffixchord = self._suffix_decor_no_prep(c)
-                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
+                            container = (self._add_note("{}/{}".format(prefixchord, suffixchord)),self._interval_time(c))
+                            chords.append(container)
                     #nema povislicu ili snizilicu
                     else:
                         pass
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
                             suffixchord = self._suffix_no_decor_prep(c)
-                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
+                            container = (self._add_note("{}/{}".format(prefixchord, suffixchord)),self._interval_time(c))
+                            chords.append(container)
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
                             suffixchord = self._suffix_no_decor_no_prep(c)
-                            chords.append(self._add_note("{}/{}".format(prefixchord, suffixchord)))
+                            container = (self._add_note("{}/{}".format(prefixchord, suffixchord)),self._interval_time(c))
+                            chords.append(container)
                 else:
                     #ima povisilicu ili snizilicu
                     if(c.prefix.decor):
                         #ima molove majeve susove divove itd
                         if(c.prefix.prep):
                             prefixchord = self._prefix_decor_prep(c)
-                            chords.append(self._add_note("{}".format(prefixchord)))
+                            container = (self._add_note("{}".format(prefixchord)), self._interval_time(c))
+                            chords.append(container)
                         #nena nista od toga
                         else:
                             prefixchord = self._prefix_decor_no_prep(c)
-                            chords.append(self._add_note("{}".format(prefixchord)))
+                            container = (self._add_note("{}".format(prefixchord)), self._interval_time(c))
+                            chords.append(container)
                     #nema povislicu ili snizilicu
                     else:
                         if(c.prefix.prep):
                             prefixchord = self._prefix_no_decor_prep(c)
-                            chords.append(self._add_note("{}".format(prefixchord)))
+                            container = (self._add_note("{}".format(prefixchord)), self._interval_time(c))
+                            chords.append(container)
                         else:
                             prefixchord = self._prefix_no_decor_no_prep(c)
-                            chords.append(self._add_note("{}".format(prefixchord)))
+                            container = (self._add_note("{}".format(prefixchord)), self._interval_time(c))
+                            chords.append(container)
             else:
                 pause = PauseChord(duration=c.time)
-                chords.append(pause)
+                container = (pause, pause.duration)
+                chords.append(container)
         
         self.akordi = [x for x in chords]
 
@@ -128,7 +143,7 @@ class PauseChord(object):
         self.name = "Pause"
         
     def __str__(self, *args, **kwargs):
-        return "{} {}".format(self.name, self.duration)
+        return "{}".format(self.name)
     
     def __repr__(self, *args, **kwargs):
         return  self.__str__()
@@ -143,6 +158,18 @@ def chord_command_processor(move_cmd):
     """
     if move_cmd.number == 0:
         move_cmd.number = ""
+
+def chord_interval_processor(move_cmd):
+    """
+    Procesor koji ce u slucaju da je interval trajanja akorda ostavljen na 0
+    prebaciti na 4, Razlog tome je posto mingus ocekuje neku vrednost koliko
+    traje akord ceo ton, pola,osminu,cetrtinu,....
+    
+    Args:move_cmd model koji se proverava
+    
+    """
+    if move_cmd.time == 0:
+        move_cmd.time = 4
 
 class GuitarChordProcessor(object):
     """
@@ -161,7 +188,8 @@ class GuitarChordProcessor(object):
         self.guitar_chords_mm = metamodel_from_file(guitar_chords_grammar_file, debug=False)
         self.guitar_chords_mm.register_obj_processors({'BaseExtended': chord_command_processor,
                                       "PrepExtended":chord_command_processor,
-                                      "DecorateExtended":chord_command_processor})
+                                      "DecorateExtended":chord_command_processor,
+                                      "ChordDuration":chord_interval_processor})
         self.guitar_chords_model = guitar_model
         #guitar_chords_model = guitar_chords_mm.model_from_file('examples/rythm.mcx')
             

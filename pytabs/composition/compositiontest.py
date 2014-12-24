@@ -19,9 +19,8 @@ class Song:
                                             model.header.beatup,model.header.beatdown,
                                             model.header.tempo))
         
-        if model.soundfonts:
-            for sf in model.soundfonts:
-                print "{} {}".format(sf.name, sf.path)
+        for sf in model.imports.soundfonts:
+            print "{} {}".format(sf.name, sf.path)
         
         for seq in model.sequences:
             print("{} {}".format(seq.type,seq.name))

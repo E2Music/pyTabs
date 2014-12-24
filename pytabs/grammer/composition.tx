@@ -3,7 +3,7 @@ import tablature
 
 Program:
 	header=SongHeader
-	("import" soundfonts*=SoundFont)?
+	imports=SoundFontImport
 	sequences*=SongSequence
 	timeline=Timeline
 ;
@@ -15,6 +15,10 @@ SongHeader:
 	"Beat" beatup=INT "/" beatdown=INT
 	"Tempo" tempo=INT
 "]"
+;
+
+SoundFontImport:
+	"import" soundfonts*=SoundFont
 ;
 
 SongSequence:

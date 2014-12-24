@@ -14,6 +14,7 @@ from types import NoneType
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
 
 DEFAULT_CHORD_DURATION = 4
+DEFAULT_EMPTY_NUMBER = ""
 
 class Music:
 
@@ -60,12 +61,22 @@ class Music:
         return suffixret
     
     def _add_note(self, note_name):
+        """
+        Metoda koja na osnovu imena akorda vraca NoteContainer iz imena. Ova
+        metoda je direktno zavisna od pogloge tj mingusa u ovoj verziji!
+        """
+        
         n = NoteContainer()
         n.add_notes(from_shorthand(note_name))
         
         return n
     
     def _interval_time(self, chord):
+        """
+        Metoda koja proverava da li je zadat interval za duzinu trajanja akorda.
+        Ako je zadata vrednost uzima je, ako nije vraca neku default vrednost
+        """
+        
         return chord.duration.time if type(chord.duration) is not NoneType else DEFAULT_CHORD_DURATION
     
     def interpret(self, model):
@@ -157,7 +168,7 @@ def chord_command_processor(move_cmd):
         
     """
     if move_cmd.number == 0:
-        move_cmd.number = ""
+        move_cmd.number = DEFAULT_EMPTY_NUMBER
 
 def chord_interval_processor(move_cmd):
     """
@@ -169,7 +180,7 @@ def chord_interval_processor(move_cmd):
     
     """
     if move_cmd.time == 0:
-        move_cmd.time = 4
+        move_cmd.time = DEFAULT_CHORD_DURATION
 
 class GuitarChordProcessor(object):
     """

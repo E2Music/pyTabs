@@ -24,7 +24,7 @@ def play_examples():
     for instrument in instrument_dependencies.keys():
         if not isfile(INSTRUMENTS_DIR+instrument):
             url = instrument_dependencies[instrument]
-            print('Please download the soundfont: "{instrument}" from {url} and place it in the instruments folder.'.format(instrument=instrument, url=url))
+            print('Please download the soundfont: "{instrument}" from {url} and place it in the instruments folder at {instruments_dir}.'.format(instrument=instrument, url=url, instruments_dir=INSTRUMENTS_DIR))
             has_unresolved = True
             
     if not has_unresolved:

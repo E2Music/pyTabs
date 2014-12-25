@@ -16,18 +16,24 @@ from pytabs.guitar.guitar_tablature import GuitarTabProcessor
 
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
 
-def parse_composition_file(composition_file_path):
-      
+def get_composition_metamodel(script_dir):
     composition_mm = metamodel_from_file(GRAMMAR_PATH + 'composition.tx', debug=False)
     composition_mm.register_obj_processors({'BaseExtended': chord_command_processor,
                                       "PrepExtended": chord_command_processor,
                                       "DecorateExtended":chord_command_processor,
                                       "ChordDuration":chord_interval_processor,
                                       "SongSequence":process_sequence,
-                                      "Program":lambda program: process_instruments(program, os.path.dirname(composition_file_path)),
+                                      "Program":lambda program: process_instruments(program, script_dir),
                                       })
-    
+    return composition_mm
+
+def parse_composition_file(composition_file_path):
+    composition_mm = get_composition_metamodel(script_dir=os.path.dirname(composition_file_path))
     return composition_mm.model_from_file(composition_file_path)
+
+def parse_composition_string(composition_string, script_dir):
+    composition_mm = get_composition_metamodel(script_dir=script_dir)
+    return composition_mm.model_from_str(composition_string)
 
 def process_sequence(sequence):
     processor = {
@@ -60,5 +66,4 @@ def process_instruments(program, composition_file_path_dir):
         imports[instrument.name] = path_prefix+'/'+instrument.path
     
     program.imports = imports
-    
     

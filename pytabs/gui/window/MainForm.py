@@ -3,7 +3,6 @@ Created on Dec 25, 2014
 
 @author: Milos
 '''
-from PySide import QtGui
 from PySide.QtCore import QSize
 from PySide.QtGui import QMainWindow, QIcon, QStackedWidget, QVBoxLayout
 

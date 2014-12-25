@@ -3,10 +3,15 @@ Created on Dec 25, 2014
 
 @author: Milos
 '''
-from PySide import QtGui
-from PySide.QtGui import QToolBar, QIcon, QTextEdit
+import os
 
+from PySide import QtGui
+from PySide.QtGui import QToolBar, QIcon
+
+import examples
+from pytabs.composition.composition import parse_composition_string
 from pytabs.gui.text.Text import Text
+from pytabs.player.player import play
 
 
 DEFAULT_INIT_TEXT="OVO JE IDEALNO MESTO DA SE DODA NEKI OSNOVNI TEKST"
@@ -21,9 +26,15 @@ class Toolbar(QToolBar):
         self.tab = tab
         
     def start_event(self):
-        index = self.tab.currentIndex()
-        print self.tab.currentWidget().toPlainText()
-        #ovde proslediti text modulu za prepoznavanje
+        #index = self.tab.currentIndex()
+        #print self.tab.currentWidget().toPlainText()
+        INSTRUMENTS_PATH =os.path.abspath(os.path.dirname(examples.__file__))+'/songs'
+        
+        path = self.tab.currentWidget().toPlainText()
+        rezz = parse_composition_string(composition_string=path,
+                                        script_dir=INSTRUMENTS_PATH)
+        play(rezz)
+        
     
     def new_event(self):
         centralText = Text(default_text=DEFAULT_INIT_TEXT)
@@ -60,15 +71,15 @@ class Toolbar(QToolBar):
         self.exit.setToolTip("Exit")
         
     def wirebuttons(self):
-        self.addAction(self.newcomposition)
+        #self.addAction(self.newcomposition)
         self.addAction(self.startcomposition)
         
-        self.addSeparator()
+        """self.addSeparator()
         
         self.addAction(self.savecomposition)
         self.addAction(self.opencomposition)
         
         self.addSeparator()
         
-        self.addAction(self.exit)
+        self.addAction(self.exit)"""
         

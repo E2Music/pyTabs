@@ -24,7 +24,7 @@ def parse_composition_file(composition_file_path):
                                       "DecorateExtended":chord_command_processor,
                                       "ChordDuration":chord_interval_processor,
                                       "SongSequence":process_sequence,
-                                      "Program":process_instruments,
+                                      "Program":lambda program: process_instruments(program, os.path.dirname(composition_file_path)),
                                       })
     
     return composition_mm.model_from_file(composition_file_path)
@@ -51,7 +51,14 @@ def process_chords(chords_model):
     
     return track
 
-def process_instruments(program):
-    program.imports = {instrument.name:instrument.path for instrument in program.imports.soundfonts}
+def process_instruments(program, composition_file_path_dir):
+    imports = {}
+    for instrument in program.imports.soundfonts:
+        path_prefix = ''
+        if not os.path.isabs(instrument.path):
+            path_prefix = composition_file_path_dir
+        imports[instrument.name] = path_prefix+'/'+instrument.path
+    
+    program.imports = imports
     
     

@@ -5,7 +5,7 @@ Created on Dec 25, 2014
 '''
 from PySide.QtGui import QTabWidget
 
-from pytabs.gui.Text import Text
+from pytabs.gui.text.Text import Text
 
 
 class Tab(QTabWidget):

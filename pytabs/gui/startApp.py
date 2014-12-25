@@ -6,7 +6,8 @@ Created on Dec 25, 2014
 import sys
 
 from PySide.QtGui import QApplication
-from pytabs.gui.MainForm import MainForm
+
+from pytabs.gui.window.MainForm import MainForm
 
 
 if __name__ == '__main__':

@@ -19,6 +19,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         super(SyntaxHighlighter, self).__init__(parent)
         self.keyword = QTextCharFormat()
         self.string = QTextCharFormat()
+        self.comment = QTextCharFormat()
         self.highlightingRules = []
         
         brush = QBrush(Qt.darkBlue, Qt.SolidPattern)
@@ -42,6 +43,13 @@ class SyntaxHighlighter(QSyntaxHighlighter):
         pattern.setMinimal( True )
         self.string.setForeground( brush )
         rule = HighlightingRule( pattern, Qt.darkGreen )
+        self.highlightingRules.append( rule )
+        
+        # comment
+        brush = QBrush( Qt.darkGray, Qt.SolidPattern )
+        pattern = QRegExp( "//.*$" )
+        self.comment.setForeground( brush )
+        rule = HighlightingRule( pattern, Qt.darkGray )
         self.highlightingRules.append( rule )
             
     def highlightBlock(self, text):

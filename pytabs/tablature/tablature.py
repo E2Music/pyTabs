@@ -91,9 +91,9 @@ class TablatureProcessor:
         if n == 0:
             return string
         elif len(string) == 0:
-            raise ParsingException("expected '-'")
+            raise ParsingException("expected '-' at: "+string)
         elif not all(c == '-' for c in string[:n]):
-            raise ParsingException("expected '-'")
+            raise ParsingException("expected '-' at: "+string)
         else:
             return string[n:]
     
@@ -152,7 +152,7 @@ class TablatureParser:
         """Extracts tablature string model (textx) and then parses it."""
         tab_strings_model = self.tab_metamodel.model_from_str(tab_string)
         return self.processor.process_tablature_model(tab_strings_model)
-    
+
 class ParsingException(Exception):
     def __init__(self, args):
         super(ParsingException, self).__init__(args)

@@ -15,8 +15,7 @@ class Tab(QTabWidget):
         self.tabCloseRequested.connect(self.closeTab)
         self.setMovable(True)
         
-        self.centralText = Text()
-        
+        self.centralText = Text("NEki tekst")
         self.addTab(self.centralText, "Text")
         
     def closeTab(self, index):

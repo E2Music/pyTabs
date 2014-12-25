@@ -18,6 +18,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
     def __init__(self, parent):
         super(SyntaxHighlighter, self).__init__(parent)
         self.keyword = QTextCharFormat()
+        self.string = QTextCharFormat()
         self.highlightingRules = []
         
         brush = QBrush(Qt.darkBlue, Qt.SolidPattern)
@@ -27,13 +28,21 @@ class SyntaxHighlighter(QSyntaxHighlighter):
                                 "next", "repeat", "return", "switch", 
                                 "try", "while" ]"""
         
-        self.keyword = ["Scenario", "Feature", "Given", "When", "Then",
-                        "And", "But", "Examples", "Background"]
+        self.keyword = ["import", "sequence", "segment", "timeline", "guitar-rhythm",
+                        "guitar-solo", "bass", "drums", "keyboards", "electro", "Name","Author","Beat","Tempo"]
         
         for word in self.keyword:
             pattern = QRegExp("\\b" + word + "\\b")
-            rule = HighlightingRule(pattern, self.keyword)
+            rule = HighlightingRule(pattern, Qt.darkBlue)
             self.highlightingRules.append(rule)
+        
+        # string
+        brush = QBrush( Qt.darkGreen, Qt.SolidPattern )
+        pattern = QRegExp( "\".*\"" )
+        pattern.setMinimal( True )
+        self.string.setForeground( brush )
+        rule = HighlightingRule( pattern, Qt.darkGreen )
+        self.highlightingRules.append( rule )
             
     def highlightBlock(self, text):
         for rule in self.highlightingRules:
@@ -49,7 +58,7 @@ class SyntaxHighlighter(QSyntaxHighlighter):
                 pass"""
             while index >= 0:
                 length = expression.matchedLength()
-                self.setFormat(index, length, Qt.darkBlue)
+                self.setFormat(index, length, rule.format)
                 index = text.find(expression.pattern(), index + length)
             
         self.setCurrentBlockState(0)

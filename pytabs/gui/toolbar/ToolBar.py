@@ -50,7 +50,7 @@ class Toolbar(QToolBar):
     
     
     def createbuttons(self):
-        self.newcomposition = QtGui.QAction(QIcon('images/test.ico'), 'New composition', self)
+        self.newcomposition = QtGui.QAction(QIcon('images/icon.png'), 'New composition', self)
         self.newcomposition.triggered.connect(self.new_event)
         self.newcomposition.setToolTip("Create tab for new composition")
         
@@ -58,28 +58,28 @@ class Toolbar(QToolBar):
         self.startcomposition.triggered.connect(self.start_event)
         self.startcomposition.setToolTip("Start current composition")
         
-        self.savecomposition = QtGui.QAction(QIcon('images/test.ico'), 'New composition', self)
+        self.savecomposition = QtGui.QAction(QIcon('images/save.png'), 'Save composition', self)
         self.savecomposition.triggered.connect(self.save_event)
-        self.savecomposition.setToolTip("Create tab for new composition")
+        self.savecomposition.setToolTip("Save current composition")
         
-        self.opencomposition = QtGui.QAction(QIcon('images/test.ico'), 'Save current composition', self)
+        self.opencomposition = QtGui.QAction(QIcon('images/open.png'), 'Open composition', self)
         self.opencomposition.triggered.connect(self.open_event)
         self.opencomposition.setToolTip("Open saved composition")
         
-        self.exit = QtGui.QAction(QIcon('images/test.ico'), 'Save current composition', self)
+        self.exit = QtGui.QAction(QIcon('images/exit.png'), 'Exit', self)
         #self.exit.triggered.connect(self)
         self.exit.setToolTip("Exit")
         
     def wirebuttons(self):
-        #self.addAction(self.newcomposition)
+        self.addAction(self.newcomposition)
         self.addAction(self.startcomposition)
         
-        """self.addSeparator()
+        self.addSeparator()
         
         self.addAction(self.savecomposition)
         self.addAction(self.opencomposition)
         
         self.addSeparator()
         
-        self.addAction(self.exit)"""
+        self.addAction(self.exit)
         

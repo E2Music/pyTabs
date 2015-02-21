@@ -12,7 +12,7 @@ import pytabs
 from pytabs.chords.guitarchords import chord_command_processor, \
     chord_interval_processor, GuitarChordProcessor
 from pytabs.guitar.guitar_tablature import GuitarTabProcessor
-
+from pytabs.keyboards.keyboard_tablature import KeyboardTabProcessor
 
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
 
@@ -39,9 +39,13 @@ def process_sequence(sequence):
     processor = {
                  "guitar-solo":process_guitar_tabs,
                  "guitar-rhythm":process_chords,
+                 "keyboards":process_keyboard_tabs,
                 }[sequence.type]
     
     sequence.value = processor(sequence.value)
+
+def process_keyboard_tabs(tabs_model):
+    return KeyboardTabProcessor().process(tabs_model)
 
 def process_guitar_tabs(tabs_model):
     return GuitarTabProcessor().process(tabs_model)

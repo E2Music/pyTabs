@@ -1,0 +1,21 @@
+/*
+Keyboard tablature note grammar:
+
+example:
+a
+C
+-
+
+*/
+
+MusicSymbol:
+	Note|Rest
+;
+
+Note:
+	key=/^\w/
+;
+
+Rest:
+	'-'
+;

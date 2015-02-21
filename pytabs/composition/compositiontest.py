@@ -11,7 +11,7 @@ import pytabs
 from pytabs.chords.guitarchords import GuitarChordProcessor, chord_command_processor, chord_interval_processor
 from pytabs.guitar.guitar_tablature import GuitarNoteProcessor
 from pytabs.tablature.tablature import TablatureProcessor
-
+from pytabs.keyboards.keyboard_tablature import KeyboardNoteProcessor
 
 class Song:
     def interpret(self, model):
@@ -34,6 +34,11 @@ class Song:
                 print akords
             elif(seq.value.__class__.__name__=="Tablature" and seq.type == "guitar-solo"):
                 processor = TablatureProcessor(GuitarNoteProcessor())
+                res = processor.process_tablature_model(seq.value)
+                print res
+            
+            elif(seq.value.__class__.__name__=="Tablature" and seq.type == "keyboards"):
+                processor = TablatureProcessor(KeyboardNoteProcessor)
                 res = processor.process_tablature_model(seq.value)
                 print res
         

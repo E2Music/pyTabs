@@ -1,0 +1,47 @@
+/*
+#    PyTabs - Simplified music notation DSL, interpreter and player.
+#    Copyright (C) 2014, Zeljko Bal
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/*
+Tablature grammar:
+
+guitar example:
+
+e|-0----10-3-||
+B|-0----1--1-||
+G|-12pm----6-||
+D|-2----9--0-||
+A|-2----3--2-||
+E|-----------||
+All notes must be separated by a dash '-' and they can be of arbitrary length (with parameters),
+every note must be followed by additional dashes for the length of the longest note in a column,
+all strings must be of equal length and each one must start with '|-' and end with '-||'
+*/
+
+Tablature:
+	strings+=String
+;
+
+// string example G|-12pm----6-||
+String:
+	// a word followed by dashes
+	mark=/(\w)+(-)*/
+	'|-'
+	// a string of words and dashes with '-' at the end
+	chars=/[\w-]+-/
+	'||'
+;

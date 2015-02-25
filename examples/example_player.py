@@ -52,3 +52,5 @@ def play_examples():
             print("********************************************")
             play(composition_model)
 
+if __name__ == '__main__':
+    play_examples()

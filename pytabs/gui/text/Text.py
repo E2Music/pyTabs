@@ -9,6 +9,12 @@ from pytabs.gui.text.SyntaxHighlighter import SyntaxHighlighter
 
 
 class Text(QTextEdit):
+
+    
+    def setmodified(self):
+        self.setModified(True)
+    
+    
     def __init__(self, parent=None, default_text="tekx"):
         super(Text,self).__init__(parent)
         
@@ -22,3 +28,4 @@ class Text(QTextEdit):
         self.colorer = SyntaxHighlighter(self)
         
         self.setPlainText(default_text)
+        self.textChanged.connect(self.setmodified)

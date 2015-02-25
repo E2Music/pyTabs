@@ -10,8 +10,8 @@ class StatusBar(QStatusBar):
     def __init__(self, parent=None):
         super(StatusBar,self).__init__(parent)
         
-        self.labelStatus = QLabel("Tekst Neki")
+        """self.labelStatus = QLabel("Tekst Neki")
         self.labelSelection = QLabel("Selection Label")
         self.addWidget(self.labelStatus)
-        self.addWidget(self.labelSelection)
+        self.addWidget(self.labelSelection)"""
         

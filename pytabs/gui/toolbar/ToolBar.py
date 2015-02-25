@@ -6,11 +6,13 @@ Created on Dec 25, 2014
 import os
 
 from PySide import QtGui
-from PySide.QtGui import QToolBar, QIcon
+from PySide.QtGui import QToolBar, QIcon, QFileDialog, QMessageBox
 
 import examples
 from pytabs.composition.composition import parse_composition_string
 from pytabs.gui.text.Text import Text
+from pytabs.gui.window.AboutDialog import AboutDialog
+from pytabs.gui.window.NewDialog import NewDialog
 from pytabs.player.player import play
 
 
@@ -37,16 +39,38 @@ class Toolbar(QToolBar):
         
     
     def new_event(self):
-        centralText = Text(default_text=DEFAULT_INIT_TEXT)
-        self.tab.addTab(centralText, "Labela")
-    
+        dialog = NewDialog(self)
+        dialog.exec_()
+        centralText = Text(default_text=dialog.getResult())
+        self.tab.addTab(centralText, "New tab")
         
     def save_event(self):
-        pass
+        fileName,_ = QFileDialog.getSaveFileName(self,"Open PyTabs song", os.getcwd(), "PyTabs song files (*.song)")
+        
+        if fileName != "":
+            with open(fileName, "w") as f:
+                f.write(self.tab.currentWidget().toPlainText())
+            msgBox = QMessageBox()
+            msgBox.setText("The document has been saved.")
+            msgBox.exec_()
     
     
     def open_event(self):
-        pass
+        fileName,_ = QFileDialog.getOpenFileName(self,"Open PyTabs song", os.getcwd(), "PyTabs song files (*.song)")
+        
+        if fileName != "":
+            with open(fileName) as file:
+                doc = ""
+                for line in file.readlines():
+                    doc += line
+                    
+                centralText = Text(default_text=doc)
+                self.tab.addTab(centralText, "New Tab")
+    
+    
+    def about_event(self):
+        about = AboutDialog(self)
+        about.exec_()
     
     
     def createbuttons(self):
@@ -66,6 +90,10 @@ class Toolbar(QToolBar):
         self.opencomposition.triggered.connect(self.open_event)
         self.opencomposition.setToolTip("Open saved composition")
         
+        self.about = QtGui.QAction(QIcon('images/about.png'), 'About PyTabs', self)
+        self.about.triggered.connect(self.about_event)
+        self.about.setToolTip("About PyTabs")
+        
         self.exit = QtGui.QAction(QIcon('images/exit.png'), 'Exit', self)
         #self.exit.triggered.connect(self)
         self.exit.setToolTip("Exit")
@@ -81,5 +109,6 @@ class Toolbar(QToolBar):
         
         self.addSeparator()
         
+        self.addAction(self.about)
         self.addAction(self.exit)
         

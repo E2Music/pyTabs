@@ -1,10 +1,12 @@
-# PyTabs
+#<img src="https://raw.githubusercontent.com/E2Music/pyTabs/afcb14757df8b9c051750909fcc00a47a44c142f/logo.jpg" width="100"/> PyTabs
 
 PyTabs is a DSL (Domain Specific Language) for simplified music notation and composition description. The projet includes an interpreter that creates an object model of a composition based on the provided description and a player that renders music based on that model, all of which is accessable through a simple GUI.
 
 In PyTabs language you can describe a composition which is composed of several segments played sequentially. Each segment consists of one or more sequences that are played together. Each sequence is played by a specified instrument and described in one of supported notations. Currently PyTabs supports guitar and keyboard tablatures and guitar chords and it can easily be extended to support other notations.
 
-An example of a composition in PyTabs language can be found in examples/songs/smoke_on_the_water.song .
+An example of a composition in PyTabs language can be found in examples/songs/smoke_on_the_water.song . Here is the example with marked composition sections:
+
+![song example screenshot](https://raw.githubusercontent.com/E2Music/pyTabs/afcb14757df8b9c051750909fcc00a47a44c142f/screens/song_example_scheme.png) 
 
 ## Technical description
 
@@ -38,6 +40,8 @@ To run the example song you can simply run the play_examples script in the root 
 The first time you run it, it will tell you to download the necessary soundfont files and where to place them. After that you can run it again and you should be able to hear the music. The example can be found at examples/songs/smoke_on_the_water.song . 
 
 You can also start the GUI by running the start_gui script in the root directory. Enter a valid composition description in PyTabs language such as the one provided in the example (you can click the 'new' button and choose to open the example file) and click the 'play' button to play the composition.
+
+![gui screenshot](https://raw.githubusercontent.com/E2Music/pyTabs/afcb14757df8b9c051750909fcc00a47a44c142f/screens/gui_screen.png)
 
 You can also check out the grammar definitions in pytabs/grammar. They are easy to understand and can help you write your own compositions.
 

@@ -32,7 +32,8 @@ INSTRUMENTS_DIR = SONGS_DIR+'instruments/'
 examples = ['smoke_on_the_water.song']
 instrument_dependencies={'Saber_5ths_and_3rds.sf2':'http://www.hammersound.com/cgi-bin/soundlink_download2.pl/Download%20USA;Saber_5ths_and_3rds.rar;724',
                          'Soundfont BassFing.sf2':'http://www.hammersound.com/cgi-bin/soundlink_download2.pl/Download%20USA;BassFing.rar;740',
-                         'AJH_Piano.sf2':'http://www.hammersound.com/cgi-bin/soundlink_download2.pl/Download%20USA;AJH_Piano.rar;696'
+                         'AJH_Piano.sf2':'http://www.hammersound.com/cgi-bin/soundlink_download2.pl/Download%20USA;AJH_Piano.rar;696',
+                         'GuitarSetPasisHeavyAndClean.sf2':'http://www.hammersound.com/cgi-bin/soundlink_download2.pl/Download%20USA;GuitarSetPasisHeavyAndClean.rar;520',
                          }
 
 def play_examples():

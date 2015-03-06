@@ -13,6 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from mingus.containers.NoteContainer import NoteContainer
 
 '''
 Created on Dec 25, 2014
@@ -20,15 +21,16 @@ Created on Dec 25, 2014
 @author: zeljko.bal
 '''
 from os.path import os
-from textx.metamodel import metamodel_from_file
 
 from mingus.containers.Track import Track
+from textx.metamodel import metamodel_from_file
 
 import pytabs
 from pytabs.chords.guitarchords import chord_command_processor, \
-    chord_interval_processor, GuitarChordProcessor
+    chord_interval_processor, GuitarChordProcessor, PauseChord
 from pytabs.guitar.guitar_tablature import GuitarTabProcessor
 from pytabs.keyboards.keyboard_tablature import KeyboardTabProcessor
+
 
 GRAMMAR_PATH = os.path.abspath(os.path.dirname(pytabs.__file__))+'/grammar/'
 
@@ -73,7 +75,12 @@ def process_chords(chords_model):
     track = Track()
     
     for chord,duration in chords:
-        track.add_notes(chord, duration)
+        if isinstance(chord, PauseChord):
+            track.add_notes(NoteContainer(), duration)
+        else:
+            track.add_notes(chord, duration)
+    
+    _change_track_octave(track, -1)
     
     return track
 
@@ -86,4 +93,16 @@ def process_instruments(program, composition_file_path_dir):
         imports[instrument.name] = path_prefix+'/'+instrument.path
     
     program.imports = imports
+    
+def _change_track_octave(track, n):
+    if n == 0:
+        return
+    for _ in range(abs(n)):
+        for bar in track.bars:
+            for note in bar.bar[0][2]:
+                if n > 0:
+                    note.octave_up()
+                else:
+                    note.octave_down()
+    
     

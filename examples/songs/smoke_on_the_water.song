@@ -9,6 +9,7 @@ import
 bass "instruments/Soundfont BassFing.sf2"
 guitar "instruments/Saber_5ths_and_3rds.sf2"
 piano "instruments/AJH_Piano.sf2"
+guitar2 "instruments/GuitarSetPasisHeavyAndClean.sf2"
 
 sequence guitar-solo guitar_tabs
 {
@@ -38,23 +39,20 @@ sequence keyboards piano_tabs
 {
 
 R|-8-8-8-8---8-8-8-8-8-8-----8-8-8-8---8-8-8-2-||
-4|-d-f-g-----d-f-G-g---------d-f-g-----f-d-----||
-2|---------------------------------------------||
-2|---------------------------------------------||
-1|---------------------------------------------||
+4|-e-g-------a-g---g---------e-g-------g-e-----||
 
 }
 
 sequence guitar-rhythm guitar_chords
 {
-	A(4) B(4) C(4) D(4) E(4) F(4) G(4)
+	E5(2) [2] A5(2) [2] A#5(2) [4] A(4) E5(4)
 }
 
 segment Chorus 
 {
 	guitar_tabs : guitar
 	bass_tabs : bass
-	guitar_chords : guitar
+	guitar_chords : guitar2
 	piano_tabs : piano
 }
 

@@ -16,15 +16,15 @@ PyTabs is implemented in python programming language, it uses [textX] python lib
 
 ####Requirements:
 - python v2.7
-- [textX]
+- [textX] v0.3.1
 ```sh
 $ pip install textX
 ```
-- [mingus]
+- [mingus] v0.5.0
 ```sh
 $ pip install mingus
 ```
-- [PySide] (for GUI)
+- [PySide] (for GUI) v1.2.2
 ```sh
 $ pip install PySide
 ```

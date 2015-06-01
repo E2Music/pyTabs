@@ -22,9 +22,9 @@ Created on Dec 12, 2014
 from os.path import os
 from textx.metamodel import metamodel_from_file
 
-from mingus.containers.Note import Note
-from mingus.containers.NoteContainer import NoteContainer
-from mingus.containers.Track import Track
+from mingus.containers import Note
+from mingus.containers import NoteContainer
+from mingus.containers import Track
 
 from pytabs.tablature.tablature import TablatureProcessor
 

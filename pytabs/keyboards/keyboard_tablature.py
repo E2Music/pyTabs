@@ -22,9 +22,9 @@ Created on Feb 10, 2015
 from os.path import os
 from textx.metamodel import metamodel_from_file
 
-from mingus.containers.Note import Note
-from mingus.containers.NoteContainer import NoteContainer
-from mingus.containers.Track import Track
+from mingus.containers import Note
+from mingus.containers import NoteContainer
+from mingus.containers import Track
 from pytabs.tablature.tablature import TablatureProcessor
 
 GRAMMAR_PATH = os.path.dirname(os.path.realpath(__file__)) + "/grammar/"

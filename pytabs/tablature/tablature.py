@@ -21,7 +21,7 @@ Created on Dec 13, 2014
 '''
 from os.path import os
 
-from mingus.containers.NoteContainer import NoteContainer
+from mingus.containers import NoteContainer
 from textx.metamodel import metamodel_from_file
 import pytabs
 

@@ -13,7 +13,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from mingus.containers.NoteContainer import NoteContainer
+from mingus.containers import NoteContainer
 
 '''
 Created on Dec 25, 2014
@@ -22,7 +22,7 @@ Created on Dec 25, 2014
 '''
 from os.path import os
 
-from mingus.containers.Track import Track
+from mingus.containers import Track
 from textx.metamodel import metamodel_from_file
 
 import pytabs
